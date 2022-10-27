@@ -43,11 +43,9 @@ As you can see, we get a nice list of macOS installers. If you need a particular
 
 ![](../images/installer-guide/mac-install-md/munki-process.png)
 
-* **macOS 12, Monterey Note**: As this OS is quite new, there's still some issues with certain systems to resolve. For more information, see here: [macOS 12: Monterey](../extras/monterey.md)
-  * For first time users, we recommend macOS Catalina (10.15) or Big Sur (11)
-  * <span style="color:red"> CAUTION: </span> With macOS 11.3 and newer, [XhciPortLimit is broken resulting in boot loops](https://github.com/dortania/bugtracker/issues/162). We advise users either install an older OS(ie. macOS 10.15, Catalina) or find a 11.2.3 or older Big Sur installer
-    * For education purposes, we have a copy provided here: [macOS 11.2.3 InstallAssistant(macOS)](https://archive.org/details/install-mac-os-11.2.3-20-d-91)
-    * If you've already [mapped your USB ports](https://dortania.github.io/OpenCore-Post-Install/usb/) and disabled `XhciPortLimit`, you can boot macOS 11.3+ without issue
+* **macOS 12 and above note**: As recent macOS versions introduce changes to the USB stack, it is highly advisable that you map your USB ports (with USBToolBox) before installing macOS.
+  * <span style="color:red"> CAUTION: </span> With macOS 11.3 and newer, [XhciPortLimit is broken resulting in boot loops](https://github.com/dortania/bugtracker/issues/162).
+    * If you've already [mapped your USB ports](https://dortania.github.io/OpenCore-Post-Install/usb/) and disabled `XhciPortLimit`, you can boot macOS 11.3+ without issues.
 
 This is going to take a while as we're downloading the entire 8GB+ macOS installer, so it's highly recommended to read the rest of the guide while you wait.
 
@@ -87,6 +85,23 @@ Next run the `createinstallmedia` command provided by [Apple](https://support.ap
 ```sh
 sudo /Applications/Install\ macOS\ Big\ Sur.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume
 ```
+
+::: details Note for users on Apple Silicon installing macOS older than Big Sur
+
+If the `createinstallmedia` fails with `zsh: killed` or `Killed: 9` then it's most likely an issue with the installer's code signature. To fix this, you can run the following command:
+
+```sh
+cd /Applications/Install\ macOS\ Big\ Sur.app/Contents/Resources/
+codesign -s - -f --deep /Applications/Install\ macOS\ Big\ Sur.app
+```
+
+You will need the command line tools for Xcode installed:
+
+```sh
+xcode-select --install
+```
+
+:::
 
 This will take some time so you may want to grab a coffee or continue reading the guide (to be fair you really shouldn't be following this guide step by step without reading the whole thing first).
 
